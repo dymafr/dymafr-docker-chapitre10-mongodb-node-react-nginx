@@ -4,6 +4,8 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile.dev
+    environment:
+      - WDS_SOCKET_PORT=0
     volumes:
       - type: bind
         source: ./client
