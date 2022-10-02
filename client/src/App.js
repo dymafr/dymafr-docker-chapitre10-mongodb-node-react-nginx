@@ -1,6 +1,6 @@
-import logo from './logo.svg';
-import './App.css';
-import { useState, useEffect } from 'react';
+import logo from "./logo.svg";
+import "./App.css";
+import { useState, useEffect } from "react";
 
 function App() {
   const [count, setCount] = useState();
@@ -8,7 +8,7 @@ function App() {
   useEffect(() => {
     async function fetchCount() {
       try {
-        const response = await fetch('/api/count');
+        const response = await fetch("/api/count");
         if (response.ok) {
           setCount(await response.json());
         }
@@ -26,9 +26,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <p>
-          Count : { count }
-        </p>
+        <p>Count : {count}</p>
         <a
           className="App-link"
           href="https://reactjs.org"
