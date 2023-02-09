@@ -1,30 +1,41 @@
 const express = require('express');
-const MongoClient = require('mongodb').MongoClient;
+const { MongoClient } = require('mongodb');
 let count;
-const MongUrl = process.env.NODE_ENV === 'production' ? 
-`mongodb://${ process.env.MONGO_USERNAME }:${ process.env.MONGO_PWD }@db` : 
-`mongodb://db`
+const uri =
+  process.env.NODE_ENV === 'production'
+    ? `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PWD}@db`
+    : `mongodb://db`;
 
-MongoClient.connect(MongUrl, { useUnifiedTopology: true }, (err, client) => {
-  if (err) {
-    console.log(err);
-  } else {
+const client = new MongoClient(uri);
+async function run() {
+  try {
+    await client.connect();
+    await client.db('admin').command({ ping: 1 });
     console.log('CONNEXION DB OK !');
-    count = client.db('test').collection("count");
+    count = client.db('test').collection('count');
+    if ((await count.countDocuments()) === 0) {
+      count.insertOne({ count: 0 });
+    }
+  } catch (err) {
+    console.log(err.stack);
   }
-});
+}
+run().catch(console.dir);
 
 const app = express();
 
 app.get('/api/count', (req, res) => {
-  count.findOneAndUpdate({}, { $inc: { count: 1 } }, { returnNewDocument: true }).then((doc) => {
-    const count = doc.value;
-    res.status(200).json(count.count);
-  })
-})
+  count
+    .findOneAndUpdate({}, { $inc: { count: 1 } }, { returnNewDocument: true })
+    .then((doc) => {
+      const count = doc.value;
+      console.log(count);
+      res.status(200).json(count.count);
+    });
+});
 
 app.all('*', (req, res) => {
   res.status(404).end();
-})
+});
 
 app.listen(80);
