@@ -26,11 +26,13 @@ const app = express();
 
 app.get('/api/count', (req, res) => {
   count
-    .findOneAndUpdate({}, { $inc: { count: 1 } }, { returnNewDocument: true })
+    .findOneAndUpdate(
+      {},
+      { $inc: { count: 1 } },
+      { returnNewDocument: true, upsert: true }
+    )
     .then((doc) => {
-      const count = doc.value;
-      console.log(count);
-      res.status(200).json(count.count);
+      res.status(200).json(doc.count ? doc.count : 0);
     });
 });
 
