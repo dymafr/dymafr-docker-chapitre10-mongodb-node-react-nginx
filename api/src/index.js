@@ -32,7 +32,7 @@ app.get('/api/count', (req, res) => {
       { returnNewDocument: true, upsert: true }
     )
     .then((doc) => {
-      res.status(200).json(doc.count ? doc.count : 0);
+      res.status(200).json(doc ? doc.count : 0);
     });
 });
 
