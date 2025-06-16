@@ -28,7 +28,9 @@ async function connectDB() {
     process.exit(1);
   }
 }
-connectDB();
+connectDB().then(() => {
+  app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));
+});
 
 app.get("/api/count", async (req, res) => {
   try {
@@ -47,4 +49,3 @@ app.all("*", (req, res) => {
   res.status(404).end();
 });
 
-app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));
