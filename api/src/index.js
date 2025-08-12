@@ -43,7 +43,7 @@ app.get("/api/count", async (req, res) => {
   }
 });
 
-app.all("*", (req, res) => {
+app.all('/{*splat}', (req, res) => {
   res.status(404).end();
 });
 

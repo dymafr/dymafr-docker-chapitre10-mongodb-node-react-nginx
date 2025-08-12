@@ -24,7 +24,7 @@ services:
       - "3001:80"
   
   db:
-    image: mongo:7
+    image: mongo:8
     restart: always
     volumes: 
       - type: volume
