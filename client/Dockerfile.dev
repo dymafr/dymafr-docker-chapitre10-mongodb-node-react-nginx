@@ -1,6 +1,6 @@
-FROM node:alpine
+FROM node:lts-alpine
 WORKDIR /home/node
-COPY package.json ./
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . ./
 CMD ["npm", "run", "dev", "--", "--host"]

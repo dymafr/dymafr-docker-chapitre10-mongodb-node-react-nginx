@@ -1,7 +1,7 @@
-FROM node:alpine
+FROM node:lts-alpine
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm install --only=production
+RUN npm ci --omit=dev
 COPY . .
 EXPOSE 80
 CMD ["node", "src/index.js"]

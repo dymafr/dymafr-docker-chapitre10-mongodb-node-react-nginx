@@ -1,4 +1,4 @@
-services: 
+services:
   client:
     build:
       context: ./client
@@ -9,39 +9,42 @@ services:
         target: /home/node
       - type: volume
         target: /home/node/node_modules
-    ports: 
+    ports:
       - "5173:5173"
-  
+
   api:
     build:
       context: ./api
       dockerfile: Dockerfile
-    volumes: 
+    environment:
+      NODE_ENV: development
+      MONGO_URL_FILE: /run/secrets/mongo-url
+    secrets:
+      - mongo-url
+    volumes:
       - type: bind
         source: ./api/src
         target: /app/src
-    ports: 
+    ports:
       - "3001:80"
-  
+
   db:
     image: mongo:8
-    restart: always
-    volumes: 
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dymaroot
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo-admin-passe
+    secrets:
+      - mongo-admin-passe
+    volumes:
       - type: volume
         source: dbtest
         target: /data/db
-    ports:
-      - "27017:27017"
-  
-  reverse-proxy:
-    build:
-      context: ./reverseproxy
-      dockerfile: Dockerfile.dev
-    ports: 
-      - "80:80"
-    depends_on: 
-      - client
-      - api
-      - db
-volumes: 
+
+volumes:
   dbtest:
+
+secrets:
+  mongo-url:
+    file: ./secrets/mongo-url
+  mongo-admin-passe:
+    file: ./secrets/mongo-admin-passe
